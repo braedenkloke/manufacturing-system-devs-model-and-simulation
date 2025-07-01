@@ -5,15 +5,20 @@
 
 struct Event {
     int orderID;
+    int eventID;
 
-    explicit Event(int id): orderID(id) {};
+    explicit Event(int id): orderID(id) {
+        static int eventIDCounter = 1;
+        eventID = eventIDCounter++;
+    };
 };
 
 #ifndef NO_LOGGING
 // Formats the event log.
 std::ostream& operator<<(std::ostream &out, const Event& event) {
     out << "Event Log: ";
-    out << "orderID: " << event.orderID;
+    out << "orderID: " << event.orderID << " ";
+    out << "eventID: " << event.eventID << " ";
     return out;
 }
 #endif
