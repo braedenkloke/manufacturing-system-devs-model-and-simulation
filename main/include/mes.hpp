@@ -13,8 +13,9 @@ struct MESState {
     std::vector<int> ordersInProgress; // FIFO queue containing order IDs
     std::vector<int> completedOrders;
     bool cellIsIdle;
+    int newOrdersCount; // Number of new orders since last resource allocation
 
-    explicit MESState(): sigma(infinity), cellIsIdle(true) {}
+    explicit MESState(): sigma(infinity), cellIsIdle(true), newOrdersCount(0) {}
 };
 
 #ifndef NO_LOGGING
@@ -44,7 +45,7 @@ std::ostream& operator<<(std::ostream &out, const MESState& state) {
 // Atomic DEVS model of a Manufacturing Execution System (MES).
 class MES : public Atomic<MESState> {
 public:
-    Port<Event> placeOrder, enterCell, cellOperationEnd;
+    Port<Event> placeOrder, newOrder, enterCell, cellOperationEnd;
 
     MES(const std::string id) : Atomic<MESState>(id, MESState()) {
         // Input ports
@@ -52,6 +53,7 @@ public:
         cellOperationEnd = addInPort<Event>("cellOperationEnd");
 
         // Output ports
+        newOrder = addOutPort<Event>("newOrder");
         enterCell = addOutPort<Event>("enterCell");
     }
 
@@ -59,7 +61,8 @@ public:
         if (state.cellIsIdle && !state.ordersInProgress.empty()) {
             state.cellIsIdle = false;
         }
-
+        
+        state.newOrdersCount = 0;
         state.sigma = infinity;
     }
 
@@ -69,6 +72,8 @@ public:
             // Add order to end of queue
             int orderID = placeOrder->getBag().back().orderID;
             state.ordersInProgress.push_back(orderID);
+            state.newOrdersCount++;
+            state.sigma = 0;
         }
        
         // Handle completed orders
@@ -89,6 +94,9 @@ public:
     }
     
     void output(const MESState& state) const override {
+        if (state.newOrdersCount > 0) {
+            newOrder->addMessage(Event(state.ordersInProgress.back(), this->id, newOrderActivity));
+        }
         if (state.cellIsIdle && !state.ordersInProgress.empty()) {
             enterCell->addMessage(Event(state.ordersInProgress.front(), this->id, enterCellActivity));
         }
