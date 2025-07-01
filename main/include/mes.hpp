@@ -14,8 +14,9 @@ struct MESState {
     std::vector<int> completedOrders;
     bool cellIsIdle;
     int newOrdersCount; // Number of new orders since last resource allocation
+    int completedOrdersCount; // Number of completed orders since last resource allocation
 
-    explicit MESState(): sigma(infinity), cellIsIdle(true), newOrdersCount(0) {}
+    explicit MESState(): sigma(infinity), cellIsIdle(true), newOrdersCount(0), completedOrdersCount(0) {}
 };
 
 #ifndef NO_LOGGING
@@ -45,7 +46,7 @@ std::ostream& operator<<(std::ostream &out, const MESState& state) {
 // Atomic DEVS model of a Manufacturing Execution System (MES).
 class MES : public Atomic<MESState> {
 public:
-    Port<Event> placeOrder, newOrder, enterCell, cellOperationEnd;
+    Port<Event> placeOrder, newOrder, enterCell, cellOperationEnd, orderCompleted;
 
     MES(const std::string id) : Atomic<MESState>(id, MESState()) {
         // Input ports
@@ -55,6 +56,7 @@ public:
         // Output ports
         newOrder = addOutPort<Event>("newOrder");
         enterCell = addOutPort<Event>("enterCell");
+        orderCompleted = addOutPort<Event>("orderCompleted");
     }
 
     void internalTransition(MESState& state) const override {
@@ -63,6 +65,7 @@ public:
         }
         
         state.newOrdersCount = 0;
+        state.completedOrdersCount = 0;
         state.sigma = infinity;
     }
 
@@ -85,6 +88,8 @@ public:
                 state.ordersInProgress[i] = state.ordersInProgress[i + 1];
             }
             state.ordersInProgress.pop_back();
+            state.completedOrdersCount++;
+            state.sigma = 0;
         }
       
         // Allocate resources
@@ -96,6 +101,9 @@ public:
     void output(const MESState& state) const override {
         if (state.newOrdersCount > 0) {
             newOrder->addMessage(Event(state.ordersInProgress.back(), this->id, newOrderActivity));
+        }
+        if (state.completedOrdersCount > 0) {
+            orderCompleted->addMessage(Event(state.completedOrders.back(), this->id, orderCompletedActivity));
         }
         if (state.cellIsIdle && !state.ordersInProgress.empty()) {
             enterCell->addMessage(Event(state.ordersInProgress.front(), this->id, enterCellActivity));
