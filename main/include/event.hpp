@@ -19,11 +19,10 @@ struct Event {
 #ifndef NO_LOGGING
 // Formats the event log.
 std::ostream& operator<<(std::ostream &out, const Event& event) {
-    out << "Event Log: ";
-    out << "orderID: " << event.orderID << " ";
-    out << "eventID: " << event.eventID << " ";
-    out << "resource: " << event.resource << " ";
-    out << "activity: " << event.activity << " ";
+    out << "orderID:" << event.orderID << ",";
+    out << "eventID:" << event.eventID << ",";
+    out << "resource:" << event.resource << ",";
+    out << "activity:" << event.activity << ",";
     return out;
 }
 #endif

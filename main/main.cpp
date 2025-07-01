@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
     auto model = std::make_shared<TopCoupled>("top", orders, cellAssemblyTime);
     auto rootCoordinator = cadmium::RootCoordinator(model);
 
-    rootCoordinator.setLogger<CSVLogger>(outputFile, ";");
+    rootCoordinator.setLogger<CSVLogger>(outputFile, ",");
     rootCoordinator.start();
     rootCoordinator.simulate(maxSimulationTime);
     rootCoordinator.stop();	
