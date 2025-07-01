@@ -90,7 +90,7 @@ public:
     
     void output(const MESState& state) const override {
         if (state.cellIsIdle && !state.ordersInProgress.empty()) {
-            enterCell->addMessage(Event(state.ordersInProgress.front(), enterCellActivity));
+            enterCell->addMessage(Event(state.ordersInProgress.front(), this->id, enterCellActivity));
         }
     }
 

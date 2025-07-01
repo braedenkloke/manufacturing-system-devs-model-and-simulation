@@ -72,7 +72,7 @@ public:
     
     void output(const CellState& state) const override {
         if (state.phase == cellBusy) {
-            cellOperationEnd->addMessage(Event(state.orderID, cellOperationEndActivity));
+            cellOperationEnd->addMessage(Event(state.orderID, this->id, cellOperationEndActivity));
         }
     }
 
