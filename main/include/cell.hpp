@@ -42,8 +42,7 @@ std::ostream& operator<<(std::ostream &out, const CellState& state) {
 // The cell receives commands from the MES to begin operation.
 class Cell : public Atomic<CellState> {
 public:
-    Port<Event> enterCell;
-    Port<Event> cellOperationEnd;
+    Port<Event> enterCell, cellOperationEnd;
 
     // ARGUMENTS
     // id - Model name.
