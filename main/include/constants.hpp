@@ -3,6 +3,7 @@
 
 // Sorted alphabetically.
 const std::string cellOperationEndActivity = "Cell operation end";
+const std::string cellOperationStartActivity = "Cell operation start";
 const std::string enterCellActivity = "Enter cell";
 const std::string placeOrderActivity = "Place order";
 

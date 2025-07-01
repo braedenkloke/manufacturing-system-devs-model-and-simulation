@@ -42,20 +42,24 @@ std::ostream& operator<<(std::ostream &out, const CellState& state) {
 // The cell receives commands from the MES to begin operation.
 class Cell : public Atomic<CellState> {
 public:
-    Port<Event> enterCell, cellOperationEnd;
+    Port<Event> enterCell, cellOperationStart, cellOperationEnd;
 
     // ARGUMENTS
     // id - Model name.
     // assemblyTime - Time in seconds it takes for the cell to assemble a product.
     Cell(const std::string id, double assemblyTime) : Atomic<CellState>(id, CellState()) {
         enterCell = addInPort<Event>("enterCell");
+        cellOperationStart = addOutPort<Event>("cellOperationStart");
         cellOperationEnd = addOutPort<Event>("cellOperationEnd");
 
         state.assemblyTime = assemblyTime;
     }
 
     void internalTransition(CellState& state) const override {
-        if (state.phase == cellBusy) {
+        if (state.phase == cellIdle && state.orderID >= 0) {
+            state.phase = cellBusy;
+            state.sigma = state.assemblyTime;
+        } else if (state.phase == cellBusy) {
             state.phase = cellIdle;
             state.sigma = infinity;
             state.orderID = -1;
@@ -64,13 +68,15 @@ public:
 
     void externalTransition(CellState& state, double e) const override {
         if (state.phase == cellIdle && !enterCell->empty()) {
-            state.phase = cellBusy;
-            state.sigma = state.assemblyTime; 
+            state.sigma = 0;
             state.orderID = enterCell->getBag().back().orderID;
         }
     }
     
     void output(const CellState& state) const override {
+        if (state.phase == cellIdle && state.orderID >= 0) {
+            cellOperationStart->addMessage(Event(state.orderID, this->id, cellOperationStartActivity));
+        }
         if (state.phase == cellBusy) {
             cellOperationEnd->addMessage(Event(state.orderID, this->id, cellOperationEndActivity));
         }
