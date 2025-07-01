@@ -8,7 +8,7 @@ struct Event {
     int eventID;
     std::string activity;
 
-    explicit Event(int id, std::string activity): orderID(id), activity(activity) {
+    explicit Event(int orderID, std::string activity): orderID(orderID), activity(activity) {
         static int eventIDCounter = 1;
         eventID = eventIDCounter++;
     };
