@@ -34,14 +34,14 @@ std::ostream& operator<<(std::ostream &out, const CustomerState& state) {
 // Atomic DEVS model of a Customer who places orders to the system.
 class Customer : public Atomic<CustomerState> {
 public:
-    Port<Event> placeOrderEventPort;
+    Port<Event> placeOrder;
 
     // ARGUMENTS
     // id - Model name.
     // orderPlacementTimes - Order placement times sorted in ascending order, i.e., the first order to place is the 
     //                       first element and the last order to place is the last element. 
     Customer(const std::string id, std::vector<int> orderPlacementTimes) : Atomic<CustomerState>(id, CustomerState()) {
-        placeOrderEventPort = addOutPort<Event>("placeOrderEventPort");
+        placeOrder = addOutPort<Event>("placeOrder");
 
         if (!orderPlacementTimes.empty()) {
             // Sort orders in descending order, makes working with std::vector<> easier.
@@ -84,7 +84,7 @@ public:
         static int orderID = 0;
         orderID++;
 
-        placeOrderEventPort->addMessage(Event(orderID, placeOrderActivity));
+        placeOrder->addMessage(Event(orderID, placeOrderActivity));
     }
 
     [[nodiscard]] double timeAdvance(const CustomerState& state) const override {     

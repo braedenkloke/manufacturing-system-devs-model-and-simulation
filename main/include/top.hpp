@@ -16,7 +16,7 @@ struct TopCoupled : public Coupled {
         auto cell = addComponent<Cell>("cell", cellAssemblyTime);
 
         // Couple output ports to input ports
-        addCoupling(customer->placeOrderEventPort, mes->placeOrder);
+        addCoupling(customer->placeOrder, mes->placeOrder);
         
         addCoupling(mes->enterCell, cell->enterCell);
 
