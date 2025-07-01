@@ -84,7 +84,7 @@ public:
         static int orderID = 0;
         orderID++;
 
-        placeOrderEventPort->addMessage(Event(orderID));
+        placeOrderEventPort->addMessage(Event(orderID, placeOrderActivity));
     }
 
     [[nodiscard]] double timeAdvance(const CustomerState& state) const override {     

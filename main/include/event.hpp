@@ -6,8 +6,9 @@
 struct Event {
     int orderID;
     int eventID;
+    std::string activity;
 
-    explicit Event(int id): orderID(id) {
+    explicit Event(int id, std::string activity): orderID(id), activity(activity) {
         static int eventIDCounter = 1;
         eventID = eventIDCounter++;
     };
@@ -19,6 +20,7 @@ std::ostream& operator<<(std::ostream &out, const Event& event) {
     out << "Event Log: ";
     out << "orderID: " << event.orderID << " ";
     out << "eventID: " << event.eventID << " ";
+    out << "activity: " << event.activity << " ";
     return out;
 }
 #endif
