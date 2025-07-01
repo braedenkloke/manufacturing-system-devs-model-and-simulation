@@ -16,41 +16,18 @@ With [Cadmium](https://devssim.carleton.ca/) installed, run
 ```
 source build_sim.sh
 ./bin/smart_manufacturing_system
+cat out/output.csv | grep orderID:1
 ```
-Your output will be placed in `out/output.csv`. 
 
-With the default configuration, your output will look like this
+You output will look like this
 ```
-INFO
-sep=;
-time;model_id;model_name;port_name;data
-INITIAL STATES
-0;1;cell;;State Log: phase: Idle 
-0;2;mes;;State Log: ordersInProgress: [ ] completedOrders: [ ] cellIsIdle: 1
-0;3;customer;;State Log: sigma: 0 orderPlacementTimes (in desc. order and relative to next order): [ 1 1 1 ]
-START SIMULATION
-0;2;mes;;State Log: ordersInProgress: [ 1 ] completedOrders: [ ] cellIsIdle: 1
-0;3;customer;placeOrderEventPort;Event Log: orderID: 1
-0;3;customer;;State Log: sigma: 1 orderPlacementTimes (in desc. order and relative to next order): [ 1 1 ]
-0;1;cell;;State Log: phase: Busy 
-0;2;mes;enterCell;Event Log: orderID: 1
-0;2;mes;;State Log: ordersInProgress: [ 1 ] completedOrders: [ ] cellIsIdle: 0
-1;2;mes;;State Log: ordersInProgress: [ 1 2 ] completedOrders: [ ] cellIsIdle: 0
-...
-15;1;cell;;State Log: phase: Busy 
-15;2;mes;enterCell;Event Log: orderID: 4
-15;2;mes;;State Log: ordersInProgress: [ 4 ] completedOrders: [ 1 2 3 ] cellIsIdle: 0
-20;1;cell;cellOperationEnd;Event Log: orderID: 4
-20;1;cell;;State Log: phase: Idle 
-20;2;mes;;State Log: ordersInProgress: [ ] completedOrders: [ 1 2 3 4 ] cellIsIdle: 1
-END SIMULATION
-FINAL STATES
-20;1;cell;;State Log: phase: Idle 
-20;2;mes;;State Log: ordersInProgress: [ ] completedOrders: [ 1 2 3 4 ] cellIsIdle: 1
-20;3;customer;;State Log: sigma: 2.14748e+09 orderPlacementTimes (in desc. order and relative to next order): [ ]
+0,3,customer,placeOrder,orderID:1,eventID:1,resource:customer,activity:Place order,
+0,2,mes,newOrder,orderID:1,eventID:2,resource:mes,activity:New order,
+0,2,mes,enterCell,orderID:1,eventID:3,resource:mes,activity:Enter cell,
+0,1,cell,cellOperationStart,orderID:1,eventID:4,resource:cell,activity:Cell operation start,
+5,1,cell,cellOperationEnd,orderID:1,eventID:11,resource:cell,activity:Cell operation end,
+5,2,mes,orderCompleted,orderID:1,eventID:12,resource:mes,activity:Order completed,
 ```
-The output above has been modified slightly to improve readability.
-The headers (i.e., INFO, INITIAL STATES, etc.) are not included in the Cadmium logs.
 
 A complete sample of the logs above can also be found in [out/sample/output.csv](out/sample/output.csv).
 
