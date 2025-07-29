@@ -9,36 +9,15 @@
 using namespace cadmium;
 
 struct MESState {
-    double sigma;
-    std::vector<int> ordersInProgress; // FIFO queue containing order IDs
-    std::vector<int> completedOrders;
+    std::vector<int> orders; // FIFO queue containing order IDs
     bool cellIsIdle;
-    int newOrdersCount; // Number of new orders since last resource allocation
-    int completedOrdersCount; // Number of completed orders since last resource allocation
 
-    explicit MESState(): sigma(infinity), cellIsIdle(true), newOrdersCount(0), completedOrdersCount(0) {}
+    explicit MESState(): cellIsIdle(true) {}
 };
 
 #ifndef NO_LOGGING
-// Formats the state log.
+// Formats the state log. This model is considered stateless.
 std::ostream& operator<<(std::ostream &out, const MESState& state) {
-    out << "State Log: "; 
-
-    out << "ordersInProgress: ";
-    out << "[ ";
-    for (int i = 0; i < state.ordersInProgress.size(); i++) {
-        out << state.ordersInProgress[i] << " ";
-    }
-    out << "] ";
-
-    out << "completedOrders: "; 
-    out << "[ ";
-    for (int i = 0; i < state.completedOrders.size(); i++) {
-        out << state.completedOrders[i] << " ";
-    }
-    out << "] ";
-
-    out << "cellIsIdle: " << state.cellIsIdle;
     return out;
 }
 #endif
@@ -46,7 +25,7 @@ std::ostream& operator<<(std::ostream &out, const MESState& state) {
 // Atomic DEVS model of a Manufacturing Execution System (MES).
 class MES : public Atomic<MESState> {
 public:
-    Port<Event> placeOrder, newOrder, enterCell, cellOperationEnd, orderCompleted;
+    Port<Event> placeOrder, enterCell, cellOperationEnd;
 
     MES(const std::string id) : Atomic<MESState>(id, MESState()) {
         // Input ports
@@ -54,19 +33,11 @@ public:
         cellOperationEnd = addInPort<Event>("cellOperationEnd");
 
         // Output ports
-        newOrder = addOutPort<Event>("newOrder");
         enterCell = addOutPort<Event>("enterCell");
-        orderCompleted = addOutPort<Event>("orderCompleted");
     }
 
     void internalTransition(MESState& state) const override {
-        if (state.cellIsIdle && !state.ordersInProgress.empty()) {
-            state.cellIsIdle = false;
-        }
-        
-        state.newOrdersCount = 0;
-        state.completedOrdersCount = 0;
-        state.sigma = infinity;
+        state.cellIsIdle = false;
     }
 
     void externalTransition(MESState& state, double e) const override {
@@ -74,44 +45,29 @@ public:
         if (!placeOrder->empty()) {
             // Add order to end of queue
             int orderID = placeOrder->getBag().back().orderID;
-            state.ordersInProgress.push_back(orderID);
-            state.newOrdersCount++;
-            state.sigma = 0;
+            state.orders.push_back(orderID);
         }
-       
-        // Handle completed orders
+        
         if (!cellOperationEnd->empty()) {
             state.cellIsIdle = true;
             // Remove order from front of queue
-            state.completedOrders.push_back(state.ordersInProgress.front());
-            for (int i = 0; i < state.ordersInProgress.size() - 1; i++) {
-                state.ordersInProgress[i] = state.ordersInProgress[i + 1];
+            for (int i = 0; i < state.orders.size() - 1; i++) {
+                state.orders[i] = state.orders[i + 1];
             }
-            state.ordersInProgress.pop_back();
-            state.completedOrdersCount++;
-            state.sigma = 0;
-        }
-      
-        // Allocate resources
-        if (state.cellIsIdle && !state.ordersInProgress.empty()) {
-            state.sigma = 0;
+            state.orders.pop_back();
         }
     }
     
     void output(const MESState& state) const override {
-        if (state.newOrdersCount > 0) {
-            newOrder->addMessage(Event(state.ordersInProgress.back(), this->id, newOrderActivity));
-        }
-        if (state.completedOrdersCount > 0) {
-            orderCompleted->addMessage(Event(state.completedOrders.back(), this->id, orderCompletedActivity));
-        }
-        if (state.cellIsIdle && !state.ordersInProgress.empty()) {
-            enterCell->addMessage(Event(state.ordersInProgress.front(), this->id, enterCellActivity));
-        }
+        enterCell->addMessage(Event(state.orders.front(), this->id, enterCellActivity));
     }
 
     [[nodiscard]] double timeAdvance(const MESState& state) const override {     
-        return state.sigma;
+        if (state.cellIsIdle && !state.orders.empty()) {
+            return 0;
+        } else {
+            return infinity;
+        }
     }
 };
 

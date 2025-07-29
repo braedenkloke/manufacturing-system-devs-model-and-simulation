@@ -17,22 +17,20 @@ enum CellPhase {
 
 struct CellState {
     CellPhase phase;
-    double sigma;
     int orderID;
     double assemblyTime;
 
-    explicit CellState(): phase(cellIdle), sigma(infinity), orderID(-1) {}
+    explicit CellState(): phase(cellIdle), orderID(-1) {}
 };
 
 #ifndef NO_LOGGING
 // Formats the state log.
 std::ostream& operator<<(std::ostream &out, const CellState& state) {
-    out << "State Log: ";
-    out << "phase: ";
+    out << "stateLog,";
     if (state.phase == cellIdle) {
-        out << "Idle ";
+        out << "idle";
     } else if (state.phase == cellBusy) {
-        out << "Busy ";
+        out << "busy";
     }
     return out;
 }
@@ -42,48 +40,40 @@ std::ostream& operator<<(std::ostream &out, const CellState& state) {
 // The cell receives commands from the MES to begin operation.
 class Cell : public Atomic<CellState> {
 public:
-    Port<Event> enterCell, cellOperationStart, cellOperationEnd;
+    Port<Event> enterCell, cellOperationEnd;
 
     // ARGUMENTS
     // id - Model name.
     // assemblyTime - Time in seconds it takes for the cell to assemble a product.
     Cell(const std::string id, double assemblyTime) : Atomic<CellState>(id, CellState()) {
         enterCell = addInPort<Event>("enterCell");
-        cellOperationStart = addOutPort<Event>("cellOperationStart");
         cellOperationEnd = addOutPort<Event>("cellOperationEnd");
 
         state.assemblyTime = assemblyTime;
     }
 
     void internalTransition(CellState& state) const override {
-        if (state.phase == cellIdle && state.orderID >= 0) {
-            state.phase = cellBusy;
-            state.sigma = state.assemblyTime;
-        } else if (state.phase == cellBusy) {
-            state.phase = cellIdle;
-            state.sigma = infinity;
-            state.orderID = -1;
-        }
+        state.phase = cellIdle;
+        state.orderID = -1;
     }
 
     void externalTransition(CellState& state, double e) const override {
         if (state.phase == cellIdle && !enterCell->empty()) {
-            state.sigma = 0;
             state.orderID = enterCell->getBag().back().orderID;
+            state.phase = cellBusy;
         }
     }
     
     void output(const CellState& state) const override {
-        if (state.phase == cellIdle && state.orderID >= 0) {
-            cellOperationStart->addMessage(Event(state.orderID, this->id, cellOperationStartActivity));
-        }
-        if (state.phase == cellBusy) {
-            cellOperationEnd->addMessage(Event(state.orderID, this->id, cellOperationEndActivity));
-        }
+        cellOperationEnd->addMessage(Event(state.orderID, this->id, cellOperationEndActivity));
     }
 
     [[nodiscard]] double timeAdvance(const CellState& state) const override {     
-        return state.sigma;
+        if (state.phase == cellBusy) {
+            return state.assemblyTime;
+        } else {
+            return infinity;
+        }
     }
 };
 

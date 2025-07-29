@@ -2,6 +2,7 @@
 #define EVENT_HPP
 
 #include <iostream>
+#include <constants.hpp>
 
 struct Event {
     int orderID;
@@ -19,10 +20,13 @@ struct Event {
 #ifndef NO_LOGGING
 // Formats the event log.
 std::ostream& operator<<(std::ostream &out, const Event& event) {
-    out << "orderID:" << event.orderID << ",";
-    out << "eventID:" << event.eventID << ",";
-    out << "resource:" << event.resource << ",";
-    out << "activity:" << event.activity << ",";
+    if (event.activity != placeOrderActivity) {
+        out << "eventLog,";
+        out << event.orderID << ",";
+        out << event.eventID << ",";
+        out << event.resource << ",";
+        out << event.activity << ",";
+    }
     return out;
 }
 #endif

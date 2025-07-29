@@ -17,16 +17,8 @@ struct CustomerState {
 };
 
 #ifndef NO_LOGGING
-// Formats the state log.
+// Formats the state log. This model is considered stateless.
 std::ostream& operator<<(std::ostream &out, const CustomerState& state) {
-    out << "State Log: ";
-    out << "sigma: " << state.sigma << " ";
-    out << "orderPlacementTimes (in desc. order and relative to next order): ";
-    out << "[ ";
-    for (int i = 0; i < state.orderPlacementTimes.size(); i++) {
-        out << state.orderPlacementTimes[i] << " ";
-    }
-    out << "]";
     return out;
 }
 #endif

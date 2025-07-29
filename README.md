@@ -1,33 +1,53 @@
-# Smart Manufacturing System DEVS Model 
+# Manufacturing System DEVS Model and Simulation
 [DEVS](https://en.wikipedia.org/wiki/DEVS) model and [Cadmium](https://devssim.carleton.ca/) simulation 
-of a [smart manufacturing](https://en.wikipedia.org/wiki/Smart_manufacturing) system.
+of a manufacturing system.
 
 # Background
 
 ## Smart Manufacturing System
 The modeled system is based off the smart manufacturing system studied by [Friederich and Lazarova-Molnar (2024)](https://journals.sagepub.com/doi/full/10.1177/00375497241302866?casa_token=TZrSVjFZ1-YAAAAA%3AI2L_IkiDduYKh8NvE_x07_OGoQNQjjB3_x00TFNuzlrwdu8NNnzc1HG7uaIE3aYi7RN6gynVvqpXbQ).
 It consists of a [manufacturing execution system (MES)](https://en.wikipedia.org/wiki/Manufacturing_execution_system)
-which manages multiple production lines to complete orders placed by a customer.
-Each production line has an [autonomous ground vehicle (AGV)](https://en.wikipedia.org/wiki/Unmanned_ground_vehicle) 
-which transports raw materials to an [assembly cell](https://en.wikipedia.org/wiki/Cellular_manufacturing).
+which manages a production line and processes orders placed by a customer.
+Both the MES and customer are considered as stateless.
+
+The current version consists of one production line with an [assembly cell](https://en.wikipedia.org/wiki/Cellular_manufacturing).
+Future versions will include multiple production lines and [autonomous ground vehicles (AGVs)](https://en.wikipedia.org/wiki/Unmanned_ground_vehicle) that transport raw material to the assembly cells.
 
 # Usage
 With [Cadmium](https://devssim.carleton.ca/) installed, run
 ```
 source build_sim.sh
-./bin/smart_manufacturing_system
-cat out/output.csv | grep orderID:1
+./bin/manufacturing_system | grep -v customer | grep -v mes,,
 ```
 
-You output will look like this
+You output will look like this, 
 ```
-0,3,customer,placeOrder,orderID:1,eventID:1,resource:customer,activity:Place order,
-0,2,mes,newOrder,orderID:1,eventID:2,resource:mes,activity:New order,
-0,2,mes,enterCell,orderID:1,eventID:3,resource:mes,activity:Enter cell,
-0,1,cell,cellOperationStart,orderID:1,eventID:4,resource:cell,activity:Cell operation start,
-5,1,cell,cellOperationEnd,orderID:1,eventID:11,resource:cell,activity:Cell operation end,
-5,2,mes,orderCompleted,orderID:1,eventID:12,resource:mes,activity:Order completed,
+INITIAL STATE
+0,1,cell,,stateLog,idle
+START SIMULATION
+0,1,cell,,stateLog,busy
+0,2,mes,enterCell,eventLog,1,2,mes,enter,
+5,1,cell,cellOperationEnd,eventLog,1,6,cell,end,
+5,1,cell,,stateLog,idle
+5,1,cell,,stateLog,busy
+5,2,mes,enterCell,eventLog,2,7,mes,enter,
+10,1,cell,cellOperationEnd,eventLog,2,8,cell,end,
+10,1,cell,,stateLog,idle
+10,1,cell,,stateLog,busy
+10,2,mes,enterCell,eventLog,3,9,mes,enter,
+15,1,cell,cellOperationEnd,eventLog,3,10,cell,end,
+15,1,cell,,stateLog,idle
+15,1,cell,,stateLog,busy
+15,2,mes,enterCell,eventLog,4,11,mes,enter,
+20,1,cell,cellOperationEnd,eventLog,4,12,cell,end,
+20,1,cell,,stateLog,idle
+END SIMULATION
+FINAL STATE
+20,1,cell,,stateLog,idle
 ```
+The headers were added for readability and are not included in the actual output.
+For logs written to standard out, 
+state logs are displayed in yellow and event logs are displayed in green.
 
 A complete sample of the logs above can also be found in [out/sample/output.csv](out/sample/output.csv).
 

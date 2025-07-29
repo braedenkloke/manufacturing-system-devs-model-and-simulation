@@ -1,64 +1,43 @@
-sep=,
 time,model_id,model_name,port_name,data
-0,1,cell,,State Log: phase: Idle 
-0,2,mes,,State Log: ordersInProgress: [ ] completedOrders: [ ] cellIsIdle: 1
-0,3,customer,,State Log: sigma: 0 orderPlacementTimes (in desc. order and relative to next order): [ 1 1 1 ]
-0,2,mes,,State Log: ordersInProgress: [ 1 ] completedOrders: [ ] cellIsIdle: 1
-0,3,customer,placeOrder,orderID:1,eventID:1,resource:customer,activity:Place order,
-0,3,customer,,State Log: sigma: 1 orderPlacementTimes (in desc. order and relative to next order): [ 1 1 ]
-0,1,cell,,State Log: phase: Idle 
-0,2,mes,newOrder,orderID:1,eventID:2,resource:mes,activity:New order,
-0,2,mes,enterCell,orderID:1,eventID:3,resource:mes,activity:Enter cell,
-0,2,mes,,State Log: ordersInProgress: [ 1 ] completedOrders: [ ] cellIsIdle: 0
-0,1,cell,cellOperationStart,orderID:1,eventID:4,resource:cell,activity:Cell operation start,
-0,1,cell,,State Log: phase: Busy 
-1,2,mes,,State Log: ordersInProgress: [ 1 2 ] completedOrders: [ ] cellIsIdle: 0
-1,3,customer,placeOrder,orderID:2,eventID:5,resource:customer,activity:Place order,
-1,3,customer,,State Log: sigma: 1 orderPlacementTimes (in desc. order and relative to next order): [ 1 ]
-1,2,mes,newOrder,orderID:2,eventID:6,resource:mes,activity:New order,
-1,2,mes,,State Log: ordersInProgress: [ 1 2 ] completedOrders: [ ] cellIsIdle: 0
-2,2,mes,,State Log: ordersInProgress: [ 1 2 3 ] completedOrders: [ ] cellIsIdle: 0
-2,3,customer,placeOrder,orderID:3,eventID:7,resource:customer,activity:Place order,
-2,3,customer,,State Log: sigma: 1 orderPlacementTimes (in desc. order and relative to next order): [ ]
-2,2,mes,newOrder,orderID:3,eventID:8,resource:mes,activity:New order,
-2,2,mes,,State Log: ordersInProgress: [ 1 2 3 ] completedOrders: [ ] cellIsIdle: 0
-3,2,mes,,State Log: ordersInProgress: [ 1 2 3 4 ] completedOrders: [ ] cellIsIdle: 0
-3,3,customer,placeOrder,orderID:4,eventID:9,resource:customer,activity:Place order,
-3,3,customer,,State Log: sigma: 2.14748e+09 orderPlacementTimes (in desc. order and relative to next order): [ ]
-3,2,mes,newOrder,orderID:4,eventID:10,resource:mes,activity:New order,
-3,2,mes,,State Log: ordersInProgress: [ 1 2 3 4 ] completedOrders: [ ] cellIsIdle: 0
-5,1,cell,cellOperationEnd,orderID:1,eventID:11,resource:cell,activity:Cell operation end,
-5,1,cell,,State Log: phase: Idle 
-5,2,mes,,State Log: ordersInProgress: [ 2 3 4 ] completedOrders: [ 1 ] cellIsIdle: 1
-5,1,cell,,State Log: phase: Idle 
-5,2,mes,enterCell,orderID:2,eventID:13,resource:mes,activity:Enter cell,
-5,2,mes,orderCompleted,orderID:1,eventID:12,resource:mes,activity:Order completed,
-5,2,mes,,State Log: ordersInProgress: [ 2 3 4 ] completedOrders: [ 1 ] cellIsIdle: 0
-5,1,cell,cellOperationStart,orderID:2,eventID:14,resource:cell,activity:Cell operation start,
-5,1,cell,,State Log: phase: Busy 
-10,1,cell,cellOperationEnd,orderID:2,eventID:15,resource:cell,activity:Cell operation end,
-10,1,cell,,State Log: phase: Idle 
-10,2,mes,,State Log: ordersInProgress: [ 3 4 ] completedOrders: [ 1 2 ] cellIsIdle: 1
-10,1,cell,,State Log: phase: Idle 
-10,2,mes,enterCell,orderID:3,eventID:17,resource:mes,activity:Enter cell,
-10,2,mes,orderCompleted,orderID:2,eventID:16,resource:mes,activity:Order completed,
-10,2,mes,,State Log: ordersInProgress: [ 3 4 ] completedOrders: [ 1 2 ] cellIsIdle: 0
-10,1,cell,cellOperationStart,orderID:3,eventID:18,resource:cell,activity:Cell operation start,
-10,1,cell,,State Log: phase: Busy 
-15,1,cell,cellOperationEnd,orderID:3,eventID:19,resource:cell,activity:Cell operation end,
-15,1,cell,,State Log: phase: Idle 
-15,2,mes,,State Log: ordersInProgress: [ 4 ] completedOrders: [ 1 2 3 ] cellIsIdle: 1
-15,1,cell,,State Log: phase: Idle 
-15,2,mes,enterCell,orderID:4,eventID:21,resource:mes,activity:Enter cell,
-15,2,mes,orderCompleted,orderID:3,eventID:20,resource:mes,activity:Order completed,
-15,2,mes,,State Log: ordersInProgress: [ 4 ] completedOrders: [ 1 2 3 ] cellIsIdle: 0
-15,1,cell,cellOperationStart,orderID:4,eventID:22,resource:cell,activity:Cell operation start,
-15,1,cell,,State Log: phase: Busy 
-20,1,cell,cellOperationEnd,orderID:4,eventID:23,resource:cell,activity:Cell operation end,
-20,1,cell,,State Log: phase: Idle 
-20,2,mes,,State Log: ordersInProgress: [ ] completedOrders: [ 1 2 3 4 ] cellIsIdle: 1
-20,2,mes,orderCompleted,orderID:4,eventID:24,resource:mes,activity:Order completed,
-20,2,mes,,State Log: ordersInProgress: [ ] completedOrders: [ 1 2 3 4 ] cellIsIdle: 1
-20,1,cell,,State Log: phase: Idle 
-20,2,mes,,State Log: ordersInProgress: [ ] completedOrders: [ 1 2 3 4 ] cellIsIdle: 1
-20,3,customer,,State Log: sigma: 2.14748e+09 orderPlacementTimes (in desc. order and relative to next order): [ ]
+[33m0,1,cell,,stateLog,idle[0m
+[33m0,2,mes,,[0m
+[33m0,3,customer,,[0m
+[33m0,2,mes,,[0m
+[32m0,3,customer,placeOrder,[0m
+[33m0,3,customer,,[0m
+[33m0,1,cell,,stateLog,busy[0m
+[32m0,2,mes,enterCell,eventLog,1,2,mes,enter,[0m
+[33m0,2,mes,,[0m
+[33m1,2,mes,,[0m
+[32m1,3,customer,placeOrder,[0m
+[33m1,3,customer,,[0m
+[33m2,2,mes,,[0m
+[32m2,3,customer,placeOrder,[0m
+[33m2,3,customer,,[0m
+[33m3,2,mes,,[0m
+[32m3,3,customer,placeOrder,[0m
+[33m3,3,customer,,[0m
+[32m5,1,cell,cellOperationEnd,eventLog,1,6,cell,end,[0m
+[33m5,1,cell,,stateLog,idle[0m
+[33m5,2,mes,,[0m
+[33m5,1,cell,,stateLog,busy[0m
+[32m5,2,mes,enterCell,eventLog,2,7,mes,enter,[0m
+[33m5,2,mes,,[0m
+[32m10,1,cell,cellOperationEnd,eventLog,2,8,cell,end,[0m
+[33m10,1,cell,,stateLog,idle[0m
+[33m10,2,mes,,[0m
+[33m10,1,cell,,stateLog,busy[0m
+[32m10,2,mes,enterCell,eventLog,3,9,mes,enter,[0m
+[33m10,2,mes,,[0m
+[32m15,1,cell,cellOperationEnd,eventLog,3,10,cell,end,[0m
+[33m15,1,cell,,stateLog,idle[0m
+[33m15,2,mes,,[0m
+[33m15,1,cell,,stateLog,busy[0m
+[32m15,2,mes,enterCell,eventLog,4,11,mes,enter,[0m
+[33m15,2,mes,,[0m
+[32m20,1,cell,cellOperationEnd,eventLog,4,12,cell,end,[0m
+[33m20,1,cell,,stateLog,idle[0m
+[33m20,2,mes,,[0m
+[33m20,1,cell,,stateLog,idle[0m
+[33m20,2,mes,,[0m
+[33m20,3,customer,,[0m
