@@ -19,7 +19,7 @@ With [Cadmium](https://devssim.carleton.ca/) installed, run
 source run.sh
 ```
 
-You output will be in `output_data/cleaned/'.
+You output will be in the directory [output_data/cleaned/](output_data/cleaned).
 
 Your event log will look like this
 ```
@@ -51,7 +51,7 @@ TIMESTAMP,RESOURCE,STATE
 The headers were added for readability and are not included in the actual output.
 
 For how to supply your own order inputs, 
-refer to the README file in the [input_data/](input_data/) directory.
+refer to the README file in the directory [input_data/](input_data/).
 
 You can configure the simulation by modifying [main/main.cpp](main/main.cpp).
 
