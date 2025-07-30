@@ -16,43 +16,42 @@ Future versions will include multiple production lines and [autonomous ground ve
 # Usage
 With [Cadmium](https://devssim.carleton.ca/) installed, run
 ```
-source build_sim.sh
-./bin/manufacturing_system | grep -v customer | grep -v mes,,
+source run.sh
 ```
 
-You output will look like this, 
+You output will be in `output_data/cleaned/'.
+
+Your event log will look like this
 ```
-INITIAL STATE
-0,1,cell,,stateLog,idle
-START SIMULATION
-0,1,cell,,stateLog,busy
-0,2,mes,enterCell,eventLog,1,2,mes,enter,
-5,1,cell,cellOperationEnd,eventLog,1,6,cell,end,
-5,1,cell,,stateLog,idle
-5,1,cell,,stateLog,busy
-5,2,mes,enterCell,eventLog,2,7,mes,enter,
-10,1,cell,cellOperationEnd,eventLog,2,8,cell,end,
-10,1,cell,,stateLog,idle
-10,1,cell,,stateLog,busy
-10,2,mes,enterCell,eventLog,3,9,mes,enter,
-15,1,cell,cellOperationEnd,eventLog,3,10,cell,end,
-15,1,cell,,stateLog,idle
-15,1,cell,,stateLog,busy
-15,2,mes,enterCell,eventLog,4,11,mes,enter,
-20,1,cell,cellOperationEnd,eventLog,4,12,cell,end,
-20,1,cell,,stateLog,idle
-END SIMULATION
-FINAL STATE
-20,1,cell,,stateLog,idle
+TIMESTAMP,ORDER_ID,RESOURCE,ACTIVITY
+0,1,mes,enter
+5,1,cell,end
+5,2,mes,enter
+10,2,cell,end
+10,3,mes,enter
+15,3,cell,end
+15,4,mes,enter
+20,4,cell,end
 ```
+
+Your state log will look like this
+```
+TIMESTAMP,RESOURCE,STATE
+0,cell,idle
+0,cell,busy
+5,cell,idle
+5,cell,busy
+10,cell,idle
+10,cell,busy
+15,cell,idle
+15,cell,busy
+20,cell,idle
+```
+
 The headers were added for readability and are not included in the actual output.
-For logs written to standard out, 
-state logs are displayed in yellow and event logs are displayed in green.
-
-A complete sample of the logs above can also be found in [out/sample/output.csv](out/sample/output.csv).
 
 For how to supply your own order inputs, 
-refer to the README file in the [in/orders](in/orders) directory.
+refer to the README file in the [input_data/](input_data/) directory.
 
 You can configure the simulation by modifying [main/main.cpp](main/main.cpp).
 

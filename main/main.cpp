@@ -11,8 +11,8 @@ int main(int argc, char* argv[]) {
     std::vector<int> orders;
 
     // Configure simulation
-    std::string inputFile = "in/orders/default.txt";
-    std::string outputFile = "out/output.csv";
+    std::string inputFile = "input_data/default.txt";
+    std::string outputFile = "output_data/raw/manufacturing_sys_log.csv";
     double maxSimulationTime = 30.0;
     double cellAssemblyTime = 5;
 
@@ -34,8 +34,8 @@ int main(int argc, char* argv[]) {
     auto model = std::make_shared<TopCoupled>("top", orders, cellAssemblyTime);
     auto rootCoordinator = cadmium::RootCoordinator(model);
 
-    rootCoordinator.setLogger<STDOUTLogger>(",");
-    //rootCoordinator.setLogger<CSVLogger>(outputFile, ",");
+    //rootCoordinator.setLogger<STDOUTLogger>(",");
+    rootCoordinator.setLogger<CSVLogger>(outputFile, ",");
     rootCoordinator.start();
     rootCoordinator.simulate(maxSimulationTime);
     rootCoordinator.stop();	
