@@ -64,6 +64,7 @@ Alternatively, you can run the simulation remotely on the [DEVSim servers](https
 - [Mitacs](https://www.mitacs.ca/our-programs/globalink-research-award/)
 
 # See Also
+- [DEVS-miner](https://github.com/braedenkloke/devs-miner)
 - [Friederich, J. (2023). *Data-Driven Assessment of Reliability for Cyber-Physical Production Systems*.](https://portal.findresearcher.sdu.dk/en/publications/data-driven-assessment-of-reliability-for-cyber-physical-producti)
 - [Cadmium Project Template](https://github.com/Sasisekhar/blank_project_rt)
 - [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html)
