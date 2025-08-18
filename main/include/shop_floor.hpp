@@ -1,5 +1,5 @@
-#ifndef CELL_HPP
-#define CELL_HPP
+#ifndef SHOP_FLOOR_HPP
+#define SHOP_FLOOR_HPP
 
 #include <iostream>
 #include "cadmium/modeling/devs/atomic.hpp"
@@ -77,4 +77,4 @@ public:
     }
 };
 
-#endif // CELL_HPP
+#endif // SHOP_FLOOR_HPP

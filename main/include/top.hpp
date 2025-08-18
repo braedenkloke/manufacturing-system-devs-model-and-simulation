@@ -4,7 +4,7 @@
 #include "cadmium/modeling/devs/coupled.hpp"
 #include "customer.hpp"
 #include "mes.hpp"
-#include "cell.hpp"
+#include "shop_floor.hpp"
 
 using namespace cadmium;
 
@@ -13,14 +13,12 @@ struct TopCoupled : public Coupled {
     TopCoupled(const std::string& id, std::vector<int> orders, double cellAssemblyTime) : Coupled(id) {
         auto customer = addComponent<Customer>("customer", orders);
         auto mes = addComponent<MES>("mes");
-        auto cell = addComponent<Cell>("cell", cellAssemblyTime);
+        auto shopFloor = addComponent<Cell>("shopFloor", cellAssemblyTime);
 
         // Couple output ports to input ports
         addCoupling(customer->placeOrder, mes->placeOrder);
-        
-        addCoupling(mes->enterCell, cell->enterCell);
-
-        addCoupling(cell->cellOperationEnd, mes->cellOperationEnd);
+        addCoupling(mes->enterCell, shopFloor->enterCell);
+        addCoupling(shopFloor->cellOperationEnd, mes->cellOperationEnd);
     }
 };
 
