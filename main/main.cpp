@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
 
     // Configure simulation
     std::string inputFile = "input_data/default.txt";
-    std::string outputFile = "output_data/raw/manufacturing_sys_log.csv";
+    std::string outputFile = "output_data/raw/manufacturing_system_log.csv";
     double maxSimulationTime = 30.0;
     double cellAssemblyTime = 5;
 
