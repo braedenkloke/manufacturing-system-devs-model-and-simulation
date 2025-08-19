@@ -13,7 +13,7 @@ struct TopCoupled : public Coupled {
     TopCoupled(const std::string& id, std::vector<int> orders, double cellAssemblyTime) : Coupled(id) {
         auto customer = addComponent<Customer>("customer", orders);
         auto mes = addComponent<MES>("mes");
-        auto shopFloor = addComponent<Cell>("shopFloor", cellAssemblyTime);
+        auto shopFloor = addComponent<ShopFloor>("shopFloor", cellAssemblyTime);
 
         // Couple output ports to input ports
         addCoupling(customer->placeOrder, mes->placeOrder);
